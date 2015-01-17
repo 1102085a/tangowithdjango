@@ -1,0 +1,1 @@
+Re-init README for tangowithdjango project.
