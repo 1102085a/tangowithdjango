@@ -7,8 +7,8 @@ class Category(models.Model):
     likes = models.IntegerField(default=0)
 
 
-def __unicode__(self):
-    return self.name
+    def __unicode__(self):
+        return self.name
 
 
 class Page(models.Model):

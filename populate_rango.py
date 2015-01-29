@@ -54,7 +54,9 @@ def populate():
              title="Flask",
              url="http://flask.pocoo.org")
 
-    self_cat = add_cat("Allison, Robert")
+    self_cat = add_cat(name="Allison, Robert",
+                       views=420,
+                       likes=128)
 
     add_page(cat=self_cat,
              title="GitHub",
@@ -76,7 +78,7 @@ def add_page(cat, title, url, views=0):
     return p
 
 
-def add_cat(name):
+def add_cat(name, views, likes):
     c = Category.objects.get_or_create(name=name, views=views, likes=likes)[0]
     return c
 
