@@ -8,5 +8,8 @@
 {% block body_block %}
         <h1>This tutorial has been put together by Allison, Robert, 1102085</h1>
         <img src="{% static "images/selfie.jpg" %}" alt="Warwick Davis and I" />
+		<br>
+		<i>You have visited this site {{ visits }} times.</i>
 		<br><a href="{% url 'rango' %}">Index</a>
+		
 {% endblock %}
