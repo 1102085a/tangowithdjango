@@ -1,15 +1,16 @@
-<!DOCTYPE html>
 {% extends 'base.html' %}
 
 {% load staticfiles %}
 
-{% block title %}Rango{% endblock %}
+{% block title %}About{% endblock %}
 
 {% block body_block %}
-        <h1>This tutorial has been put together by Allison, Robert, 1102085</h1>
-        <img src="{% static "images/selfie.jpg" %}" alt="Warwick Davis and I" />
-		<br>
-		<i>You have visited this site {{ visits }} times.</i>
-		<br><a href="{% url 'rango' %}">Index</a>
-		
+    <div class="page-header">
+                <h1>About</h1>
+            </div>
+            <div>
+            <p></strong>This tutorial has been put together by Allison, Robert, 1102085</p>
+
+            <img  width="190" height="200" src="{% static "images/selfie.jpg" %}" alt="Warwick Davis and I" />
+            </div>
 {% endblock %}
