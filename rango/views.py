@@ -13,7 +13,6 @@ from rango.bing_search import run_query
 
 
 def index(request):
-
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
 
@@ -42,13 +41,13 @@ def index(request):
         request.session['visits'] = visits
     context_dict['visits'] = visits
 
-
-    response = render(request,'rango/index.html', context_dict)
+    response = render(request, 'rango/index.html', context_dict)
 
     return response
 
+
 def about(request):
-    context_dict={}
+    context_dict = {}
     # If the visits session varible exists, take it and use it.
     # If it doesn't, we haven't visited the site so set the count to zero.
     if request.session.get('visits'):
@@ -63,6 +62,21 @@ def about(request):
 
 def category(request, category_name_slug):
     context_dict = {}
+    context_dict['result_list'] = None
+    context_dict['query'] = None
+    if request.method == 'POST':
+
+        try:
+            query = request.POST['query'].strip()
+
+            if query:
+                result_list = run_query(query)
+
+                context_dict['result_list'] = result_list
+                context_dict['query'] = query
+        except:
+            pass
+
     try:
         category = Category.objects.get(slug=category_name_slug)
         context_dict['category_name'] = category.name
@@ -231,8 +245,8 @@ def user_logout(request):
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rango/')
 
-def search(request):
 
+def search(request):
     result_list = []
 
     if request.method == 'POST':
@@ -243,3 +257,56 @@ def search(request):
             result_list = run_query(query)
 
     return render(request, 'rango/search.html', {'result_list': result_list})
+
+
+def track_url(request):
+    page_id = None
+    url = '/rango/'
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.url
+            except:
+                pass
+
+
+def register_profile(request):
+    if request.method == 'POST':
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+            form = UserProfileForm(request.POST, instance=profile)
+        except:
+            form = UserProfileForm(request.POST)
+        if form.is_valid():
+            if request.user.is_authenticated():
+                profile = form.save(commit=False)
+                user = request.user
+                profile.user = user
+                try:
+                    profile.picture = request.FILES['picture']
+                except:
+                    pass
+                profile.save()
+        else:
+            print form.errors
+        return index(request)
+    else:
+        form = UserProfileForm(request.GET)
+    return render(request, 'rango/profile_registration.html', {'profile_form': form})
+
+
+@login_required
+def profile(request):
+    u = request.user
+    context_dict = {}
+    try:
+        up = UserProfile.objects.get(user=u)
+    except:
+        up = None
+    context_dict['user'] = u
+    context_dict['userprofile'] = up
+    return render(request, 'rango/profile.html', context_dict)
