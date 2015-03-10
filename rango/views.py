@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rango.models import Category
 from rango.models import Page
+from models import UserProfile
 from rango.forms import CategoryForm
 from rango.forms import PageForm
 from rango.forms import UserForm, UserProfileForm
@@ -63,6 +64,7 @@ def about(request):
 
 
 def category(request, category_name_slug):
+
     context_dict = {}
     context_dict['result_list'] = None
     context_dict['query'] = None
@@ -82,14 +84,16 @@ def category(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
         context_dict['category_name'] = category.name
-
-        pages = Page.objects.filter(category=category)
-
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
         context_dict['category'] = category
-
+        if not context_dict['query']:
+            context_dict['query'] = category.name
     except Category.DoesNotExist:
         pass
+
+    if not context_dict['query']:
+        context_dict['query'] = category.name
 
     return render(request, 'rango/category.html', context_dict)
 
@@ -124,7 +128,6 @@ def add_page(request, category_name_slug):
                 page.category = cat
                 page.views = 0
                 page.save()
-                # probably better to use a redirect here.
                 return category(request, category_name_slug)
         else:
             print form.errors
