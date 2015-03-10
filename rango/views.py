@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.http import HttpResponse
 from rango.bing_search import run_query
+from django.shortcuts import redirect
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -273,6 +275,7 @@ def track_url(request):
             except:
                 pass
 
+    return redirect(url)
 
 def register_profile(request):
     if request.method == 'POST':
