@@ -1,10 +1,6 @@
 import json
 import urllib, urllib2
-import keys
-
-# Add your BING_API_KEY
-
-BING_API_KEY = '<insert_bing_api_key>'
+from keys import BING_API_KEY
 
 def run_query(search_terms):
     # Specify the base

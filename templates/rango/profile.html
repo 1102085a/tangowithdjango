@@ -11,5 +11,6 @@
     <img src="{{ userprofile.picture.url }}"  />
     {% endif %}
     {% endif %}
-    <a href="/rango/add_profile">Edit Profile</a><br />
+    <a href="/rango/add_profile">Edit Profile</a><br/>
+	<a href="{% url 'auth_password_change' %}">Change Password</a>
 {% endblock %}
